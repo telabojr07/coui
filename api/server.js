@@ -219,7 +219,7 @@ module.exports = async (req, res) => {
       proto = "http";
     }
   } else {
-    proto = "https";
+    let proto = "https";
   }
 
   let originUrl = (await proto) + "://" + req.headers.host;
