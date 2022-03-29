@@ -210,16 +210,13 @@ module.exports = async (req, res) => {
   const mapPermalink = await dataSetting.map_permalink;
   let targetSitemap = await getListFile("sitemap");
 
-  const app_env = process.env.APP_ENV || "local";
-  if (app_env == "local") {
-    let proto = req.headers["x-forwarded-proto"];
-    if (proto) {
-      proto = proto;
-    } else {
-      proto = "http";
-    }
+  const app_env = process.env.APP_ENV || 'local'
+  
+  let proto = req.headers["x-forwarded-proto"];
+  if (proto) {
+    proto = proto;
   } else {
-    let proto = "https";
+    proto = "https";
   }
 
   let originUrl = (await proto) + "://" + req.headers.host;
@@ -238,11 +235,11 @@ module.exports = async (req, res) => {
 
       res.send();
     } else if (req.url === dataSetting.sitemap_permalink) {
-      res.setHeader("Content-Type", "application/xml");
-      res.status(200);
+      res.setHeader('Content-Type', 'application/xml')
+      res.status(200)
       res.write(
         `<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="` +
-          originUrl +
+          originUrl.replace('http://','https://') +
           `/assets/main-sitemap.xsl"?>\n`
       );
       res.write(
