@@ -1,0 +1,11 @@
+/node_modules
+/settings-backup
+/.env
+/package-lock.json
+/yarn.lock
+/robots.txt
+/settings.js
+/rules/*.js
+!/rules/.gitkeep
+main.js
+/main.js
