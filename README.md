@@ -1,6 +1,6 @@
 # NodeAGC
 
-`ps : this thing is not mine, i just add some function to my own interes, if you're the real owner of this script contact me``
+`ps : this thing is not mine, i just add some function to my own interes, if you're the real owner of this script contact me`
 
 ## Use with nginx
 
