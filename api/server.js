@@ -520,7 +520,7 @@ module.exports = async (req, res) => {
                     hs.src = ('//s10.histats.com/js15_as.js');
                     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
                   })();`;
-                  dom.body.insertBefore(histats, dom.body.firstChild);
+                  dom.body.insertBefore(histats, dom.body.lastChild);
                 }
 
                 // var hs = dom.createElement("script");
