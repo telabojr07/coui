@@ -1,52 +1,76 @@
-module.exports = {
-  name_web: "Master Resep Makanan Lezat",
-  author: "Koki Paten",
+require("dotenv").config();
+
+const siteSettings = require("./site-settings");
+const google_site_verification = process.env.GOOGLE_WEBMASTER || "";
+const sitemap_permalink = process.env.SITE_SITEMAP_LINK || "/sitemap.xml";
+const name_web = process.env.WEB_NAME || "nama situs";
+const author = process.env.WEB_AUTHOR || "Admin";
+const sitemap_list = process.env.SITEMAP_LIST.split(",") || "";
+const target = process.env.WEB_TARGET || "https://ndower.dev";
+const map_permalink = process.env.MAP_PERMALINK.split(",") || [
+  "page",
+  "content",
+  "sitemap",
+  "host",
+];
+
+const settings = {
+  name_web: name_web,
+  author: author,
   remove_comment_html: true,
-  target: "https://resep.makananenak.my.id",
-  map_permalink: ["page", "content", "sitemap", "host"],
+  remove_encrypted_scripts: true,
+  minify_options: {
+    removeComments: false,
+    removeCommentsFromCDATA: false,
+    collapseWhitespace: false,
+    collapseBooleanAttributes: false,
+    removeAttributeQuotes: false,
+    removeRedundantAttributes: false,
+    useShortDoctype: false,
+    removeEmptyAttributes: false,
+    removeOptionalTags: false,
+    removeEmptyElements: false,
+  },
+  sitemap_permalink: sitemap_permalink,
+  sitemap_list: sitemap_list,
+  target: target,
+  map_permalink: map_permalink,
   name_folder_sitemap: "sitemap",
-
   element_remove: [
-    "#___gcse_0", //gsc
-
+    "#___gcse_0",
+    "noscript",
+    "#fixedban",
+    'div[id*="ScriptRoot"]',
+    'a[href*="rebrand.ly"]',
+    ".statcounter",
+    'a[href*="statcounter.com"]',
+    'meta[property^="og:"]',
+    'script[type="text/javascript"]',
+    'meta[name="clckd"]',
+    'meta[name="google-site-verification"]',
+    'meta[name="google-adsense-platform-domain"]',
+    'meta[name="google-adsense-platform-account"]',
+    'script[src^="https://cse.google.com/"]',
+    'script[src*="mgid.com"]',
+    'script[src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]',
+    'script[src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]',
+    'script[src="https://www.google-analytics.com/analytics.js"]',
   ],
 
-  costom_element_remove: [
-    {
-      target: "resep2021.web.app",
-      element_remove_selector: [
-        '.navbar-logo',
-      ],
-      string_replace_rules: [
-        {
-          target: "https://www.funcoding.xyz/",
-          replace: "https://yayasangambut.com/"
-        }
-      ],
-      replace_element_value: [
-        {
-          target: ".navbar-caption",
-          replace: "${nameWeb}"
-        }
-      ],
-      replace_string: [
-        {
-          target: "resep2021",
-          replace: "${nameWeb}",
-        }
-      ],
-    },
-
-
-
-  ],
+  costom_element_remove: siteSettings,
   inject_element_head: [
     {
-      name_element: "beforehead",
-      data_attribute: [],
+      name_element: "script",
+      data_attribute: [
+        {
+          name_attribute: "src",
+          value_attribute: "/head.js",
+        },
+      ],
       data_innerHTML: "",
-      position: "",
+      position: "start",
     },
+
     {
       name_element: "meta",
       data_attribute: [
@@ -72,7 +96,7 @@ module.exports = {
         },
         {
           name_attribute: "content",
-          value_attribute: "DhIOtnG1suTXf3j_9BCbfsZQEps5KbYjUrKiliVwa0M",
+          value_attribute: `${google_site_verification}`,
         },
       ],
       data_innerHTML: "",
@@ -194,22 +218,12 @@ module.exports = {
       data_innerHTML: "",
       position: "start",
     },
+
     {
-
-      name_element: "meta",
-      data_attribute: [
-        {
-          name_attribute: "name",
-          value_attribute: "google-site-verification",
-        },
-        {
-          name_attribute: "value",
-          value_attribute: "bh0x4IBBzzFwzvlKjHAaQmm3-d3BQdeAf678Br7x7ro",
-        },
-
-      ],
+      name_element: "beforehead",
+      data_attribute: [],
       data_innerHTML: "",
-      position: "start",
+      position: "end",
     },
     {
       name_element: "meta",
@@ -238,7 +252,7 @@ module.exports = {
       name_element: "afterbody",
       data_attribute: [],
       data_innerHTML: "",
-      position: "end",
+      position: "start",
     },
     {
       name_element: "script",
@@ -253,3 +267,5 @@ module.exports = {
     },
   ],
 };
+
+module.exports = settings;
