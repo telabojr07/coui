@@ -231,8 +231,8 @@ module.exports = async (req, res) => {
 
       res.send();
     } else if (req.url === dataSetting.sitemap_permalink) {
-      res.status(200)
       res.setHeader('Content-Type', 'application/xml')
+      res.status(200)
       res.write(
         `<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="` +
           originUrl +
