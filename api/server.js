@@ -210,8 +210,8 @@ module.exports = async (req, res) => {
   const mapPermalink = await dataSetting.map_permalink;
   let targetSitemap = await getListFile("sitemap");
 
-  const app_env = process.env.APP_ENV || 'local'
-  
+  const app_env = process.env.APP_ENV || "local";
+
   let proto = req.headers["x-forwarded-proto"];
   if (proto) {
     proto = proto;
@@ -219,8 +219,10 @@ module.exports = async (req, res) => {
     proto = "https";
   }
 
-  let originUrl = (await proto) + "://" + req.headers.host;
-  let fullUrl = (await originUrl) + req.url;
+  let originUrl = "https://" + req.headers.host;
+  // let originUrl = (await proto) + "://" + req.headers.host;
+  // let fullUrl = (await originUrl) + req.url;
+  let fullUrl = originUrl + req.url;
   let typePermalink = await cekPermalink(req.url, mapPermalink);
   try {
     if (req.url === "/robots.txt") {
@@ -235,11 +237,11 @@ module.exports = async (req, res) => {
 
       res.send();
     } else if (req.url === dataSetting.sitemap_permalink) {
-      res.setHeader('Content-Type', 'application/xml')
-      res.status(200)
+      res.setHeader("Content-Type", "application/xml");
+      res.status(200);
       res.write(
         `<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="` +
-          originUrl.replace('http://','https://') +
+          originUrl.replace("http://", "https://") +
           `/assets/main-sitemap.xsl"?>\n`
       );
       res.write(
@@ -291,7 +293,7 @@ module.exports = async (req, res) => {
           } else {
             res.write(
               `<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="` +
-                originUrl.replace('http://','https://') +
+                originUrl.replace("http://", "https://") +
                 `/assets/main-sitemap.xsl"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd http://www.google.com/schemas/sitemap-image/1.1 http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`
             );
@@ -314,12 +316,18 @@ module.exports = async (req, res) => {
         });
         res.write(
           `<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="` +
-            originUrl.replace('http://','https://') +
+            originUrl.replace("http://", "https://") +
             `/assets/main-sitemap.xsl"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`
         );
         targetSitemap.forEach(function (a) {
           res.write(` <sitemap>\n`);
-          res.write(`   <loc>` + originUrl.replace('http://','https://') + `/` + a + `</loc>\n`);
+          res.write(
+            `   <loc>` +
+              originUrl.replace("http://", "https://") +
+              `/` +
+              a +
+              `</loc>\n`
+          );
           res.write(`   <lastmod>` + new Date().toISOString() + `</lastmod>\n`);
           res.write(` </sitemap>\n`);
         });
