@@ -14,3 +14,10 @@ proxy_set_header  X-Forwarded-Proto  $scheme;
 proxy_set_header  Accept-Encoding    "";
 ```
 
+
+## Configs
+
+important config : 
+- settings.js (copy from config.sample.js)
+- rules folder (for every single domain setting)
+- env file
