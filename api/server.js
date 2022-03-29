@@ -314,12 +314,12 @@ module.exports = async (req, res) => {
         });
         res.write(
           `<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="` +
-            originUrl +
+            originUrl.replace('http://','https://') +
             `/assets/main-sitemap.xsl"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`
         );
         targetSitemap.forEach(function (a) {
           res.write(` <sitemap>\n`);
-          res.write(`   <loc>` + originUrl + `/` + a + `</loc>\n`);
+          res.write(`   <loc>` + originUrl.replace('http://','https://') + `/` + a + `</loc>\n`);
           res.write(`   <lastmod>` + new Date().toISOString() + `</lastmod>\n`);
           res.write(` </sitemap>\n`);
         });
