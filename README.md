@@ -60,7 +60,10 @@ module.exports = {
 
 ```
 
+## Starter
 
-## run
+Try to run wth example files, just copy paste the file to settings file and rules.
+
+## Run
 
 `node index.js` or use `nodemon.js` on development.
