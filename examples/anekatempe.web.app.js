@@ -5,7 +5,7 @@ module.exports = {
   replace_string_rules: [
     {
       target: "https://www.funcoding.xyz/",
-      replace: "https://yayasangambut.com/",
+      replace: "https://google.com/",
     },
   ],
   replace_element_value: [
