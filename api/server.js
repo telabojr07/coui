@@ -662,13 +662,19 @@ module.exports = async (req, res) => {
                 }
                 if (dataReplace) {
                   dataReplace.forEach(function (a) {
-                    dom = dom.replace(a.target, a.replace);
+                    dom = dom.replaceAll(a.target, a.replace);
                   });
                 }
+                // console.log(dataSetting)
+                // dataSetting.replace_string_rules.forEach(function (b) {
+                //   console.log("replace" + b);
+                //   dom = dom.replaceAll(b.target, b.replace);
+                // });
 
                 dom = dom.replace(/\$\{titlePost\}/g, dataTitle);
                 dom = dom.replace(/\$\{urlPost\}/g, fullUrl);
                 dom = dom.replace(/\$\{nameWeb\}/g, dataSetting.name_web);
+                dom = dom.replace(/\$\{target\}/g, dataSetting.target);
                 dom = dom.replace(
                   /\$\{timePublish\}/g,
                   new Date().toISOString()
@@ -678,6 +684,7 @@ module.exports = async (req, res) => {
                   /\$\{descriptionPost\}/g,
                   dataDescription + "..."
                 );
+
                 /**
                  * add trim whitespace
                  */
