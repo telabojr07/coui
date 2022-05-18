@@ -10,7 +10,10 @@ const mime = require("mime-types");
 const minify = require("html-minifier").minify;
 const { gzip: gzip, ungzip: ungzip } = require("node-gzip");
 const settings = require("../settings");
-const { sitemap_list } = require("../settings");
+const { sitemap_list, host } = require("../settings");
+
+const useragent = require("express-useragent");
+
 const { JSDOM: JSDOM } = jsdom,
   virtualConsole = new jsdom.VirtualConsole();
 let headerDafult = {
@@ -190,7 +193,7 @@ const randomPermalink = async (obj) => {
   });
 };
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, isbot = false) => {
   //--- handle send response vercel (01) --
   if (!res.status) {
     res.status = (input) => {
@@ -515,7 +518,9 @@ module.exports = async (req, res) => {
                   const histats = dom.createElement("script");
                   histats.type = "text/javascript";
                   histats.innerHTML =
-                    `var _Hasync = _Hasync || [];
+                    `if(!Histats_variables){var Histats_variables=[];}
+                    Histats_variables.push("tags","`+ host+ `");
+                    var _Hasync = _Hasync || [];
                   _Hasync.push(['Histats.start', '1,` +
                     histatsid +
                     `,4,0,0,0,00010000']);
@@ -552,10 +557,23 @@ module.exports = async (req, res) => {
 
                 // modify title
                 let dataTitle = "";
-                dom.querySelectorAll("title").forEach(function (a) {
-                  dataTitle = a.innerHTML;
-                  a.remove();
-                });
+                let firstTitle = dom.querySelectorAll("title")[0];
+                let firstTitleInner = firstTitle.innerHTML;
+                // console.log(req.url);
+                if (req.url != "/" && isbot === true) {
+                  console.log(isbot)
+                  dataTitle = `${dataSetting.name_web} ${firstTitleInner}`;
+                } else {
+                  dataTitle = firstTitleInner;
+                }
+
+                // dom.querySelectorAll("title").forEach(function (a) {
+                //   dataTitle = a.innerHTML;
+                //   console.log(dataTitle);
+                //   a.remove();
+                // });
+
+                // console.log(isbot(request.getHeader("User-Agent")));
                 let createTitle = dom.createElement("title");
                 dataTitle = decodeURI(dataTitle);
                 createTitle.innerHTML = dataTitle;
@@ -572,6 +590,17 @@ module.exports = async (req, res) => {
                 var domBody = dom.body.outerHTML;
                 let dataReplace = [];
                 let dataReplaceElementValue = [];
+                if (dataSetting.replace_element_value) {
+                  // console.log(a.replace_element_value)
+                  dataSetting.replace_element_value.forEach((b) => {
+                    // console.log(b)
+                    // dom.querySelectorAll(b.target).forEach((c) => {
+                    //   c.innerHTML = b.replace;
+                    // });
+                  });
+                  // dataReplaceElementValue = a.replace_element_value;
+                }
+
                 dataSetting.costom_element_remove.forEach(function (a) {
                   if (a.target == hostname) {
                     if (a.element_remove_selector) {
@@ -665,15 +694,20 @@ module.exports = async (req, res) => {
                     dom = dom.replaceAll(a.target, a.replace);
                   });
                 }
-                // console.log(dataSetting)
-                // dataSetting.replace_string_rules.forEach(function (b) {
-                //   console.log("replace" + b);
-                //   dom = dom.replaceAll(b.target, b.replace);
-                // });
+
+                dataSetting.replace_string.forEach(function (b) {
+                  // console.log("replace" + b);
+                  dom = dom.replaceAll(b.target, b.replace);
+                });
 
                 dom = dom.replace(/\$\{titlePost\}/g, dataTitle);
                 dom = dom.replace(/\$\{urlPost\}/g, fullUrl);
                 dom = dom.replace(/\$\{nameWeb\}/g, dataSetting.name_web);
+                dom = dom.replace(
+                  /\$\{nameWebAlt\}/g,
+                  dataSetting.name_web_alt
+                );
+                dom = dom.replace(/\$\{host\}/g, dataSetting.host);
                 dom = dom.replace(/\$\{target\}/g, dataSetting.target);
                 dom = dom.replace(
                   /\$\{timePublish\}/g,
@@ -688,7 +722,7 @@ module.exports = async (req, res) => {
                 /**
                  * add trim whitespace
                  */
-                dom = minify(dom, settings.minify_options);
+                // dom = minify(dom, settings.minify_options);
                 // console.log(dom)
                 // dom = dom.replace(/^\s+|\s+$/gm, '')
 
